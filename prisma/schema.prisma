@@ -1,16 +1,17 @@
-// prisma/schema.prisma
-// Define your database models
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "postgres://e502b4c066a16221e49922e9e71a7fcdba8ce01e3138583eda4fb2fa10c35ff5:sk_ajaFwjJj8nUGZmS9p_mAN@db.prisma.io:5432/postgres?sslmode=require"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
-
-// Example models
 
 model User {
   id    Int     @id @default(autoincrement())
@@ -20,10 +21,12 @@ model User {
 }
 
 model Post {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   title     String
   content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+  published Boolean  @default(false)
+  authorId  Int?
+  author    User?    @relation(fields: [authorId], references: [id])
 }
